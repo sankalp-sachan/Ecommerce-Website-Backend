@@ -1,13 +1,25 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
+
 import productsRoute from "./routes/products.js";
 import cartRoute from "./routes/cart.js";
 import checkoutRoute from "./routes/checkout.js";
-import mongoose from "mongoose";
 
-// Replace with your MongoDB URI
-const MONGO_URI = "mongodb://127.0.0.1:27017/nexusmart"; // local MongoDB
-// OR for Atlas: const MONGO_URI = "mongodb+srv://username:password@cluster.mongodb.net/nexusmart";
+// Create express app
+const app = express();
+
+// ✅ Middleware
+app.use(cors({
+  origin: ["https://ecommerce-website-pi-one.vercel.app"], // frontend domain (no trailing slash)
+  credentials: true
+}));
+app.use(express.json());
+
+// ✅ MongoDB connection
+// Locally → will use mongodb://127.0.0.1:27017/nexusmart
+// On Render → will use process.env.MONGO_URI (set in Render dashboard)
+const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/nexusmart";
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -18,16 +30,18 @@ mongoose.connect(MONGO_URI, {
   console.error("❌ MongoDB connection error:", err);
 });
 
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Routes
+// ✅ Routes
 app.use("/api/products", productsRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/checkout", checkoutRoute);
 
-// Start server
+// ✅ Base route
+app.get("/", (req, res) => {
+  res.send("NexusMart backend is running 🚀");
+});
+
+// ✅ Port (Render requirement)
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`);
+});
