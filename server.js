@@ -19,7 +19,7 @@ app.use(express.json());
 // ✅ MongoDB connection
 // Locally → will use mongodb://127.0.0.1:27017/nexusmart
 // On Render → will use process.env.MONGO_URI (set in Render dashboard)
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://<nexususer>:<mymart>@cluster0.xxxxx.mongodb.net/nexusmart";
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://<E-commerce>:<Sankalp@2007>@cluster0.xxxxx.mongodb.net/nexususer?retryWrites=true&w=majority";
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -45,4 +45,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
 });
+
 
